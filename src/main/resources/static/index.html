@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Uber Demo - Driver Location</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script>
+        let stompClient = null;
+
+        function connect() {
+            const socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function(frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/driver-locations', function(message) {
+                    showDriverLocation(JSON.parse(message.body));
+                });
+            });
+        }
+
+        function disconnect() {
+            if (stompClient !== null) {
+                stompClient.disconnect();
+            }
+            console.log("Disconnected");
+        }
+
+        function sendLocation() {
+            const latitude = document.getElementById('latitude').value;
+            const longitude = document.getElementById('longitude').value;
+            const isAvailable = document.getElementById('isAvailable').checked;
+
+            const driverLocation = {
+                driver: {
+                    id: 1 // 実際のアプリでは認証情報から取得
+                },
+                location: {
+                    latitude: parseFloat(latitude),
+                    longitude: parseFloat(longitude),
+                    address: "Tokyo Tower",
+                    city: "Tokyo",
+                    state: "Tokyo",
+                    country: "Japan",
+                    postalCode: "105-0011"
+                },
+                isAvailable: isAvailable
+            };
+
+            console.log('Sending location:', driverLocation);
+            stompClient.send("/app/driver/location", {}, JSON.stringify(driverLocation));
+        }
+
+        function showDriverLocation(driverLocation) {
+            const locationDiv = document.getElementById('driverLocations');
+            const locationInfo = document.createElement('p');
+            locationInfo.textContent = `Driver ID: ${driverLocation.driver.id}, 
+                Location: (${driverLocation.location.latitude}, ${driverLocation.location.longitude}), 
+                Available: ${driverLocation.isAvailable}`;
+            locationDiv.appendChild(locationInfo);
+        }
+    </script>
+</head>
+<body onload="connect()">
+    <h1>Uber Demo - Driver Location</h1>
+    <div>
+        <h2>Send Location Update</h2>
+        <input type="number" id="latitude" placeholder="Latitude" step="0.000001">
+        <input type="number" id="longitude" placeholder="Longitude" step="0.000001">
+        <input type="checkbox" id="isAvailable"> Available
+        <button onclick="sendLocation()">Send Location</button>
+    </div>
+    <div>
+        <h2>Received Driver Locations</h2>
+        <div id="driverLocations"></div>
+    </div>
+</body>
+</html> 

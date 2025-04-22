@@ -20,9 +20,13 @@ public class LocationService {
 
     @Transactional
     public DriverLocation updateDriverLocation(User driver, Location location, boolean isAvailable) {
+        // まずLocationを保存
+        Location savedLocation = locationRepository.save(location);
+        
+        // 次にDriverLocationを作成して保存
         DriverLocation driverLocation = new DriverLocation();
         driverLocation.setDriver(driver);
-        driverLocation.setLocation(location);
+        driverLocation.setLocation(savedLocation);
         driverLocation.setTimestamp(LocalDateTime.now());
         driverLocation.setIsAvailable(isAvailable);
         
