@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/uber_db
+    username: user
+    password: pass
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  redis:
+    host: localhost
+    port: 6379
+
+jwt:
+  secret: your-secret-key-here-must-be-at-least-32-characters-long
+  expiration: 86400000 # 24 hours in milliseconds
+
+uber:
+  pricing:
+    base-fare: 2.50
+    per-mile: 1.50
+    per-minute: 0.30
+  radius:
+    driver-search: 5 # miles 
