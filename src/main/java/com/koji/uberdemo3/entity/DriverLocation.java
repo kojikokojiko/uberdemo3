@@ -2,31 +2,31 @@ package com.koji.uberdemo3.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name = "driver_locations")
-@NoArgsConstructor
-@AllArgsConstructor
 public class DriverLocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "driver_id", nullable = false)
-    private User driver;
+    @Column(name = "driver_id")
+    private Long driverId;
 
-    @ManyToOne
-    @JoinColumn(name = "location_id", nullable = false)
-    private Location location;
+    @Column(name = "latitude")
+    private Double latitude;
 
-    @Column(nullable = false)
+    @Column(name = "longitude")
+    private Double longitude;
+
+    @Column(name = "timestamp")
     private LocalDateTime timestamp;
 
-    @Column(nullable = false)
+    @Column(name = "is_available")
     private Boolean isAvailable;
+
+    @Transient
+    private Double distance;
 } 

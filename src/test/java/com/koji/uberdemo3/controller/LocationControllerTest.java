@@ -57,8 +57,9 @@ public class LocationControllerTest {
 
         DriverLocation driverLocation = new DriverLocation();
         driverLocation.setId(1L);
-        driverLocation.setDriver(driver);
-        driverLocation.setLocation(location);
+        driverLocation.setDriverId(driver.getId());
+        driverLocation.setLatitude(location.getLatitude());
+        driverLocation.setLongitude(location.getLongitude());
         driverLocation.setTimestamp(LocalDateTime.now());
         driverLocation.setIsAvailable(true);
 
@@ -88,8 +89,9 @@ public class LocationControllerTest {
 
         DriverLocation driverLocation = new DriverLocation();
         driverLocation.setId(1L);
-        driverLocation.setDriver(driver);
-        driverLocation.setLocation(location);
+        driverLocation.setDriverId(driver.getId());
+        driverLocation.setLatitude(location.getLatitude());
+        driverLocation.setLongitude(location.getLongitude());
         driverLocation.setTimestamp(LocalDateTime.now());
         driverLocation.setIsAvailable(true);
 
@@ -122,8 +124,9 @@ public class LocationControllerTest {
 
         DriverLocation driverLocation = new DriverLocation();
         driverLocation.setId(1L);
-        driverLocation.setDriver(driver);
-        driverLocation.setLocation(location);
+        driverLocation.setDriverId(driver.getId());
+        driverLocation.setLatitude(location.getLatitude());
+        driverLocation.setLongitude(location.getLongitude());
         driverLocation.setTimestamp(LocalDateTime.now());
         driverLocation.setIsAvailable(true);
 

@@ -25,8 +25,9 @@ public class LocationService {
         
         // 次にDriverLocationを作成して保存
         DriverLocation driverLocation = new DriverLocation();
-        driverLocation.setDriver(driver);
-        driverLocation.setLocation(savedLocation);
+        driverLocation.setDriverId(driver.getId());
+        driverLocation.setLatitude(savedLocation.getLatitude());
+        driverLocation.setLongitude(savedLocation.getLongitude());
         driverLocation.setTimestamp(LocalDateTime.now());
         driverLocation.setIsAvailable(isAvailable);
         
