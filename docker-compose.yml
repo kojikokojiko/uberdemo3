@@ -1,19 +1,21 @@
-version: '3.8'
-
 services:
-  app:
-    build: .
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_PROFILES_ACTIVE: dev
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/uber_db
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: pass
-      SPRING_REDIS_HOST: redis
-    depends_on:
-      - postgres
-      - redis
+  # app:
+  #   build: .
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     SPRING_PROFILES_ACTIVE: dev
+  #     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/uber_db
+  #     SPRING_DATASOURCE_USERNAME: user
+  #     SPRING_DATASOURCE_PASSWORD: pass
+  #     SPRING_REDIS_HOST: redis
+  #     SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #     - kafka
+  #   networks:
+  #     - uber-network
 
   postgres:
     image: postgres:14
@@ -25,6 +27,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - uber-network
 
   redis:
     image: redis:latest
@@ -32,6 +36,41 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    networks:
+      - uber-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - uber-network
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_HOST://localhost:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+    networks:
+      - uber-network
+
+networks:
+  uber-network:
+    driver: bridge
 
 volumes:
   postgres_data:

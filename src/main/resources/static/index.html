@@ -47,7 +47,7 @@
             };
 
             console.log('Sending location:', driverLocation);
-            stompClient.send("/app/driver/location", {}, JSON.stringify(driverLocation));
+            stompClient.send("/app/ws/driver/location", {}, JSON.stringify(driverLocation));
         }
 
         function showDriverLocation(driverLocation) {

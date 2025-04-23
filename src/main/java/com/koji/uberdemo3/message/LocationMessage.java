@@ -7,4 +7,5 @@ public class LocationMessage {
     private Long driverId;
     private double latitude;
     private double longitude;
+    private boolean isAvailable;
 } 

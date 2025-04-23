@@ -17,9 +17,12 @@ public class KafkaProducerService {
     public void sendLocationUpdate(LocationMessage message) {
         log.info("Sending location update to Kafka: {}", message);
         kafkaTemplate.send(TOPIC, String.valueOf(message.getDriverId()), message)
-            .addCallback(
-                result -> log.info("Location update sent successfully"),
-                ex -> log.error("Failed to send location update", ex)
-            );
+            .whenComplete((result, ex) -> {
+                if (ex == null) {
+                    log.info("Location update sent successfully");
+                } else {
+                    log.error("Failed to send location update", ex);
+                }
+            });
     }
 } 

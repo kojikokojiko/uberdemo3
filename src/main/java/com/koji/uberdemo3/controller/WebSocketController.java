@@ -4,7 +4,6 @@ import com.koji.uberdemo3.entity.DriverLocation;
 import com.koji.uberdemo3.service.LocationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,10 +20,10 @@ public class WebSocketController {
         this.messagingTemplate = messagingTemplate;
     }
 
-    @MessageMapping("/driver/location")
+    @MessageMapping("/ws/driver/location")
     public void updateDriverLocation(@RequestBody DriverLocation driverLocation) {
         try {
-            log.info("Received location update: {}", driverLocation);
+            log.info("Received location update via WebSocket: {}", driverLocation);
             
             // 位置情報を更新
             DriverLocation updatedLocation = locationService.updateDriverLocation(
